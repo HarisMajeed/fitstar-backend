@@ -1,9 +1,6 @@
 const Sponsors = require("../models/Sponsors");
 const constant = require("../constants/ConstantMessages");
-const userHelper = require("../helpers/user");
 const file = require("../utils/fileUpload");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 /**Create Sponsors */
 exports.create = async (req, res) => {

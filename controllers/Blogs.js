@@ -1,9 +1,6 @@
 const Blogs = require("../models/Blogs");
 const constant = require("../constants/ConstantMessages");
-const userHelper = require("../helpers/user");
 const file = require("../utils/fileUpload");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 /**Create Blog */
 exports.create = async (req, res) => {

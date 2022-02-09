@@ -68,6 +68,14 @@ module.exports = Object.freeze({
     landing: "landing",
     ambassador: "ambassadors",
   },
+
+  LANDING_UPDATED: "Landing Page successfully updated.",
+
+  CREATE_USER: "User successfully created.",
+  UPDATE_USER: "User successfully updated.",
+  RETRIEVE_USER: "User successfully retrieved.",
+  DELETE_USER: "User successfully deleted.",
+
   CREATE_BLOG: "Blog successfully created.",
   UPDATE_BLOG: "Blog successfully updated.",
   RETRIEVE_BLOG: "Blog successfully retrieved.",

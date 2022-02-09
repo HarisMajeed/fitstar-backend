@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/User");
 const auth = require("../middleware/auth");
+const adminAuth = require("../middleware/adminAuth");
 const {
   changePassword,
   emailUpdate,
@@ -54,6 +55,27 @@ router.put("/email/check/:email", auth, function (req, res) {
 
 router.get("/get", auth, function (req, res) {
   userController.getProfile(req, res);
+});
+
+
+router.post("/create", adminAuth,  function (req, res) {
+  userController.create(req, res);
+});
+
+router.get("/get", adminAuth, function (req, res) {
+  userController.get(req, res);
+});
+
+router.get("/get/:role", adminAuth, function (req, res) {
+  userController.getByRole(req, res);
+});
+
+router.delete("/delete/:id", adminAuth, function (req, res) {
+  userController.delete(req, res);
+});
+
+router.get("/search/:search", adminAuth, function (req, res) {
+  userController.search(req, res);
 });
 
 module.exports = router;

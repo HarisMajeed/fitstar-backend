@@ -1,83 +1,83 @@
-const Collaborators = require("../models/Collaborators");
+const Ambassador = require("../models/Ambassador");
 const constant = require("../constants/ConstantMessages");
 const file = require("../utils/fileUpload");
 
-/**Create Collaborator */
+/**Create Ambassador */
 exports.create = async (req, res) => {
   try {
-    if (req.body.picture) {
-      req.body.picture = await file.upload(
-        req.body.picture,
+    if (req.body.image) {
+      req.body.image = await file.upload(
+        req.body.image,
         "",
-        constant.FITSTAR_BUCKET.collaborator
+        constant.FITSTAR_BUCKET.ambassador
       );
     }
-    const collaborator = await Collaborators.create(req.body);
-    if (!collaborator) {
+    const ambassador = await Ambassador.create(req.body);
+    if (!ambassador) {
       return res
         .status(500)
         .json({ status: false, message: constant.SERVER_ERROR });
     }
-    return res.status(200).json({ message: constant.CREATE_COLLABORATOR });
+    return res.status(200).json({ message: constant.CREATE_AMBASSADOR });
   } catch (error) {
     console.log("Error!", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };
 
-/**Update Collaborator */
+/**Update Ambassador */
 exports.update = async (req, res) => {
   try {
-    if (req.body.picture) {
-      req.body.picture = await file.upload(
-        req.body.picture,
+    if (req.body.image) {
+      req.body.image = await file.upload(
+        req.body.image,
         "",
-        constant.FITSTAR_BUCKET.collaborator
+        constant.FITSTAR_BUCKET.ambassador.ambassador
       );
     }
-    const collaborator = await Collaborators.updateOne({ _id: req.params.id }, req.body);
-    if (!collaborator) {
+    const ambassador = await Ambassador.updateOne({ _id: req.params.id }, req.body);
+    if (!ambassador) {
       return res
         .status(500)
         .json({ status: false, message: constant.SERVER_ERROR });
     }
-    return res.status(200).json({ message: constant.UPDATE_COLLABORATOR });
+    return res.status(200).json({ message: constant.UPDATE_AMBASSADOR });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ message: error.message });
   }
 };
 
-/**GET Collaborator */
+/**GET Ambassador */
 exports.get = async (req, res) => {
   try {
-    let collaborators = await Collaborators.find();
+    let ambassador = await Ambassador.find();
     return res
       .status(200)
-      .send({ status: true, message: constant.SUCCESS, collaborators });
+      .send({ status: true, message: constant.SUCCESS, ambassador });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };
 
-/**DELETE Collaborator */
+/**DELETE Ambassador */
 exports.delete = async (req, res) => {
   try {
-    await Collaborators.deleteOne({ _id: req.params.id });
+    await Ambassador.deleteOne({ _id: req.params.id });
     return res
       .status(200)
-      .send({ status: true, message: constant.DELETE_COLLABORATOR });
+      .send({ status: true, message: constant.DELETE_AMBASSADOR });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };
 
-/**Search Collaborator */
+/**Search Ambassador */
 exports.search = async (req, res) => {
   try {
-    let collaborators = await Collaborators.find({
+    let ambassador = await Ambassador.find({
       $or: [
         {title: { $regex: req.params.search, $options: 'i' } },
         { description: { $regex: req.params.search, $options: 'i' } },
@@ -85,7 +85,7 @@ exports.search = async (req, res) => {
     });
     return res
       .status(200)
-      .send({ status: true, message: constant.RETRIEVE_COLLABORATOR, collaborators });
+      .send({ status: true, message: constant.RETRIEVE_SPONSOR, ambassador });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
