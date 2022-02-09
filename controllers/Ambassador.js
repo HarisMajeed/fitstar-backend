@@ -5,9 +5,9 @@ const file = require("../utils/fileUpload");
 /**Create Ambassador */
 exports.create = async (req, res) => {
   try {
-    if (req.body.image) {
-      req.body.image = await file.upload(
-        req.body.image,
+    if (req.body.picture) {
+      req.body.picture = await file.upload(
+        req.body.picture,
         "",
         constant.FITSTAR_BUCKET.ambassador
       );
@@ -28,9 +28,9 @@ exports.create = async (req, res) => {
 /**Update Ambassador */
 exports.update = async (req, res) => {
   try {
-    if (req.body.image) {
-      req.body.image = await file.upload(
-        req.body.image,
+    if (req.body.picture) {
+      req.body.picture = await file.upload(
+        req.body.picture,
         "",
         constant.FITSTAR_BUCKET.ambassador.ambassador
       );

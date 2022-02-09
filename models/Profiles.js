@@ -116,9 +116,9 @@ const profiles = new Schema(
     location: { type: String, default: "" },
     rating: { type: Number, default: 0 },
     ratingComment: { type: String, default: "" },
-    proAbout: { proAboutSchema, default: {} },
-    modelAbout: { modelAboutSchema, default: {} },
-    centerAbout: { centerAboutSchema, default: {} },
+    proAbout: { type: proAboutSchema, default: {} },
+    modelAbout: {type: modelAboutSchema, default: {} },
+    centerAbout: {type: centerAboutSchema, default: {} },
     videos: [
       {
         url: { type: String, default: "" },
@@ -169,11 +169,12 @@ const profiles = new Schema(
       vimeoLink: { type: String, default: "" },
       otherLink: { type: String, default: "" },
     },
+    activeRole: { type: String, enum: ["pro", "center", "model"] },
     role: { type: String, enum: ["pro", "center", "model"] },
-    user:{
-        type: Schema.Types.ObjectId,
-        ref: 'Users'
-    }
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
   },
   { timestamps: true, versionKey: false }
 );

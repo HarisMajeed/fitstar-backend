@@ -5,9 +5,17 @@ const file = require("../utils/fileUpload");
 /**Create LandingPage */
 exports.create = async (req, res) => {
   try {
-    if (req.body.image) {
-      req.body.image = await file.upload(
-        req.body.image,
+    if (req.body.bannerImage) {
+      req.body.bannerImage = await file.upload(
+        req.body.bannerImage,
+        "",
+        constant.FITSTAR_BUCKET.landing
+      );
+    }
+
+    if (req.body.aboutUsBannerImage) {
+      req.body.aboutUsBannerImage = await file.upload(
+        req.body.aboutUsBannerImage,
         "",
         constant.FITSTAR_BUCKET.landing
       );
@@ -29,16 +37,15 @@ exports.create = async (req, res) => {
   }
 };
 
-
 /**GET Landing Get */
 exports.get = async (req, res) => {
-    try {
-      let landingPage = await LandingPage.find();
-      return res
-        .status(200)
-        .send({ status: true, message: constant.SUCCESS, landingPage });
-    } catch (error) {
-      console.log("ERROR:::", error);
-      return res.status(500).json({ status: false, message: error.message });
-    }
-  };
+  try {
+    let landingPage = await LandingPage.find();
+    return res
+      .status(200)
+      .send({ status: true, message: constant.SUCCESS, landingPage });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};

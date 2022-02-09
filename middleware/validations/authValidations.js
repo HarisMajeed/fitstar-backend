@@ -2,7 +2,7 @@ const JOI = require('@hapi/joi');
 const ObjectID = require('mongodb').ObjectId;
 /**User SignIn/SignUp Schema */
 const userSchema = JOI.object().keys({
-    name: JOI.string().required(),
+    fullName: JOI.string().required(),
     email: JOI.string().email().required(),
     password: JOI.string().required(),
     role: JOI.string().valid("pro", "center", "model").required(),
