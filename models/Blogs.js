@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const blogSchema = new Schema(
   {
     title: { type: String, default: "" },
-    descrption: { type: String, default: "" },
+    description: { type: String, default: "" },
     authorName: { type: String },
     category: {
       type: String,
