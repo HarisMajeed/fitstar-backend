@@ -3,6 +3,7 @@ const userHelper = require("../helpers/user");
 const bcrypt = require("bcrypt");
 const constant = require("../constants/ConstantMessages");
 const { upload } = require("../utils/fileUpload");
+const Profiles = require("../models/Profiles");
 
 exports.profileBasic = async (req, res) => {
   try {
@@ -181,6 +182,16 @@ exports.create = async (req, res) => {
     req.body.status = constant.ACTIVE;
     req.body.isDeleted = false;
     const user = await User.create(req.body);
+    req.body.activeRole = req.body.role;
+    req.body.user = user._id;
+    if (req.body.image) {
+      req.body.image = await file.upload(
+        req.body.image,
+        "",
+        constant.FITSTAR_BUCKET.sponsor
+      );
+    }
+    const profile = await Profiles.create(req.body);
     if (!user) {
       return res
         .status(500)
