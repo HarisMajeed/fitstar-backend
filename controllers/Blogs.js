@@ -79,7 +79,7 @@ exports.update = async (req, res) => {
 /**GET Blogs */
 exports.get = async (req, res) => {
   try {
-    let blogs = await Blogs.find();
+    let blogs = await Blogs.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, blogs });

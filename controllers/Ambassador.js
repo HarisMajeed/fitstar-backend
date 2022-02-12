@@ -51,7 +51,7 @@ exports.update = async (req, res) => {
 /**GET Ambassador */
 exports.get = async (req, res) => {
   try {
-    let ambassador = await Ambassador.find();
+    let ambassador = await Ambassador.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, ambassador });

@@ -51,7 +51,7 @@ exports.update = async (req, res) => {
 /**GET Collaborator */
 exports.get = async (req, res) => {
   try {
-    let collaborators = await Collaborators.find();
+    let collaborators = await Collaborators.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, collaborators });

@@ -36,7 +36,7 @@ exports.update = async (req, res) => {
 /**GET Landing Get */
 exports.get = async (req, res) => {
   try {
-    let landingPage = await LandingPage.find();
+    let landingPage = await LandingPage.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, landingPage });

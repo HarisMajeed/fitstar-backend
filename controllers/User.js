@@ -211,7 +211,7 @@ exports.create = async (req, res) => {
 /**GET User */
 exports.get = async (req, res) => {
   try {
-    let users = await User.find();
+    let users = await User.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
