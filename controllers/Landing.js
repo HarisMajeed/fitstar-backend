@@ -2,8 +2,8 @@ const LandingPage = require("../models/LandingPage");
 const constant = require("../constants/ConstantMessages");
 const file = require("../utils/fileUpload");
 
-/**Create LandingPage */
-exports.create = async (req, res) => {
+/**Update LandingPage */
+exports.update = async (req, res) => {
   try {
     if (req.body.bannerImage) {
       req.body.bannerImage = await file.upload(
@@ -20,11 +20,7 @@ exports.create = async (req, res) => {
         constant.FITSTAR_BUCKET.landing
       );
     }
-    const landingPage = await LandingPage.updateOne(
-      { _id: req.body.id },
-      req.body,
-      { upsert: true }
-    );
+    const landingPage = await LandingPage.updateOne({ _id: req.params.id }, req.body);
     if (!landingPage) {
       return res
         .status(500)

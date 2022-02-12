@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
+const { userCreate } = require("../middleware/validations/userValidations");
 const {
   changePassword,
   emailUpdate,
@@ -57,8 +58,7 @@ router.get("/get", auth, function (req, res) {
   userController.getProfile(req, res);
 });
 
-
-router.post("/create", adminAuth,  function (req, res) {
+router.post("/create", adminAuth, userCreate, function (req, res) {
   userController.create(req, res);
 });
 

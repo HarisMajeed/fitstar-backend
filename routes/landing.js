@@ -8,8 +8,8 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-router.post("/create", adminAuth,  function (req, res) {
-    landingController.create(req, res);
+router.put("/update/:id", adminAuth,  function (req, res) {
+    landingController.update(req, res);
 });
 
 router.get("/get", adminAuth, function (req, res) {
