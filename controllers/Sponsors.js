@@ -51,7 +51,7 @@ exports.update = async (req, res) => {
 /**GET Sponsors */
 exports.get = async (req, res) => {
   try {
-    let sponsors = await Sponsors.find();
+    let sponsors = await Sponsors.find().exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, sponsors });
