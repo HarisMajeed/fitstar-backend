@@ -5,9 +5,31 @@ const constant = require("../constants/ConstantMessages");
 const { upload } = require("../utils/fileUpload");
 const Profiles = require("../models/Profiles");
 
+/**update basic info and active role of user */
 exports.profileBasic = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    let profile = await Profiles.findOne({
+      activeRole: req.body.activeRole,
+      user: req.user._id,
+    });
+    if (req.body.image) {
+      req.body.image = await file.upload(
+        req.body.image,
+        "",
+        constant.FITSTAR_BUCKET.user
+      );
+    }
+    if (profile) {
+      await Profiles.updateOne({ _id: profile._id }, req.body);
+      profile = await Profiles.findById(profile._id);
+      return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
+    }
+    profile =  await Profiles.create(req.body);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
+
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -16,27 +38,12 @@ exports.profileBasic = async (req, res) => {
 
 exports.profileAbout = async (req, res) => {
   try {
-    let body = req.body;
-    if (Object.keys(body).length === 0) {
+    if (Object.keys(req.body).length === 0) {
       return res.status(200).json({ message: "Nothing to update" });
     }
-    if (typeof body.backgroundImage === "object") {
-      body.backgroundImage = await upload(
-        body.backgroundImage.file,
-        body.backgroundImage.name,
-        body.backgroundImage.type
-      );
-    }
-    if (typeof body.image === "object") {
-      body.image = await upload(
-        body.image.file,
-        body.image.name,
-        body.image.type
-      );
-    }
-    await User.updateOne({ _id: req.params.id }, body);
-    let user = await User.findById(req.params.id);
-    return res.status(200).send({ message: constant.PROFILE_UPDATE, user });
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -45,7 +52,12 @@ exports.profileAbout = async (req, res) => {
 
 exports.profileVideo = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -54,7 +66,12 @@ exports.profileVideo = async (req, res) => {
 
 exports.profilePortfolio = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -63,7 +80,12 @@ exports.profilePortfolio = async (req, res) => {
 
 exports.profileGallery = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -72,7 +94,12 @@ exports.profileGallery = async (req, res) => {
 
 exports.profileAds = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -81,7 +108,12 @@ exports.profileAds = async (req, res) => {
 
 exports.profileContactUs = async (req, res) => {
   try {
-    return;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(200).json({ message: "Nothing to update" });
+    }
+    await Profiles.updateOne({ _id: req.params.id }, req.body);
+    let profile = await Profiles.findById(req.params.id);
+    return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });

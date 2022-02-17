@@ -8,7 +8,7 @@ module.exports = Object.freeze({
   ALREADY_REGISTERED: "Email already registered!",
   PHONE_VERIFIED: "Contact number successfully verified",
   EMAIL_VERIFIED: "Email successfully verified",
-  INVALID_USER: "Sorry! You are not registered with BitXmi-Mop NFT.",
+  INVALID_USER: "Sorry! You are not registered with FitStar.",
   EMAIL_NOT_VERIFIED:
     "Your email is not verified. Please verify first then you can signIn.",
   PHONE_NOT_VERIFIED:
