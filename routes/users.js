@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-router.put("/profile/basic/:id", auth, function (req, res) {
+router.post("/profile/update/basic/info", auth, function (req, res) {
   userController.profileBasic(req, res);
 });
 

@@ -12,7 +12,7 @@ exports.profileBasic = async (req, res) => {
       return res.status(200).json({ message: "Nothing to update" });
     }
     let profile = await Profiles.findOne({
-      activeRole: req.body.activeRole,
+      role: req.body.role,
       user: req.user._id,
     });
     if (req.body.image) {
@@ -22,14 +22,19 @@ exports.profileBasic = async (req, res) => {
         constant.FITSTAR_BUCKET.user
       );
     }
+    req.body.activeRole = req.body.role;
     if (profile) {
       await Profiles.updateOne({ _id: profile._id }, req.body);
+      await Profiles.updateMany({ user: req.user._id, activeRole: {$ne: req.body.activeRole}}, {$set:{activeRole:''}});
       profile = await Profiles.findById(profile._id);
-      return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
+      return res
+      .status(200)
+      .send({ message: constant.PROFILE_UPDATE, profile });
     }
-    profile =  await Profiles.create(req.body);
+    req.body.user = req.user._id;
+    profile = await Profiles.create(req.body);
+    await Profiles.updateMany({ user: req.user._id, activeRole: {$ne: req.body.activeRole}}, {$set:{activeRole:''}});
     return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
-
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -122,7 +127,10 @@ exports.profileContactUs = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    let user = await User.find();
+    let user = await Profiles.findOne({
+      user: req.user._id,
+      activeRole: req.params.role,
+    });
     return res.status(200).send({ message: constant.SUCCESS, user: user[0] });
   } catch (error) {
     console.error(error);

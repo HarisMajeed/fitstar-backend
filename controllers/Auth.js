@@ -31,8 +31,7 @@ exports.signUpUser = async (req, res) => {
 
     return res.status(201).json({
       status: true,
-      message: constant.NEW_USER_CREATED + " " + req.body.email,
-      profile,
+      message: constant.NEW_USER_CREATED + " " + req.body.email
     });
   } catch (error) {
     console.log("Error!", error);
@@ -59,7 +58,7 @@ exports.login = async (req, res) => {
       }
       if (isMatch) {
         let role = await Profiles.findOne(
-          { user: foundUser._id },
+          { user: foundUser._id, activeRole:{$not:/^$/} },
           "activeRole"
         );
         foundUser = foundUser.toObject();

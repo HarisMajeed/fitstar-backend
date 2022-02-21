@@ -169,7 +169,7 @@ const profiles = new Schema(
       vimeoLink: { type: String, default: "" },
       otherLink: { type: String, default: "" },
     },
-    activeRole: { type: String, enum: ["pro", "center", "model"] },
+    activeRole: { type: String, enum: ["","pro", "center", "model"] },
     role: { type: String, enum: ["pro", "center", "model"] },
     user: {
       type: Schema.Types.ObjectId,
