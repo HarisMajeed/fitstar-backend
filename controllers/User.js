@@ -251,7 +251,7 @@ exports.create = async (req, res) => {
 /**GET User */
 exports.get = async (req, res) => {
   try {
-    let users = await User.find().exec();
+    let users = await User.find({role:{$ne:"admin"}}).exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
