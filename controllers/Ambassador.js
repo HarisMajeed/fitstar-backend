@@ -35,7 +35,10 @@ exports.update = async (req, res) => {
         constant.FITSTAR_BUCKET.ambassador.ambassador
       );
     }
-    const ambassador = await Ambassador.updateOne({ _id: req.params.id }, req.body);
+    const ambassador = await Ambassador.updateOne(
+      { _id: req.params.id },
+      req.body
+    );
     if (!ambassador) {
       return res
         .status(500)
@@ -52,6 +55,11 @@ exports.update = async (req, res) => {
 exports.get = async (req, res) => {
   try {
     let ambassador = await Ambassador.find().exec();
+    let companies = await Ambassador.find()
+      .sort({ _id: -1 })
+      .limit(parseInt(req.body.limit) || 10)
+      .skip(parseInt(req.body.limit) * (parseInt(req.body.offset) - 1))
+      .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, ambassador });
@@ -79,8 +87,8 @@ exports.search = async (req, res) => {
   try {
     let ambassador = await Ambassador.find({
       $or: [
-        {title: { $regex: req.params.search, $options: 'i' } },
-        { description: { $regex: req.params.search, $options: 'i' } },
+        { title: { $regex: req.params.search, $options: "i" } },
+        { description: { $regex: req.params.search, $options: "i" } },
       ],
     });
     return res
