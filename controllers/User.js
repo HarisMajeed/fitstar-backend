@@ -25,15 +25,21 @@ exports.profileBasic = async (req, res) => {
     req.body.activeRole = req.body.role;
     if (profile) {
       await Profiles.updateOne({ _id: profile._id }, req.body);
-      await Profiles.updateMany({ user: req.user._id, activeRole: {$ne: req.body.activeRole}}, {$set:{activeRole:''}});
+      await Profiles.updateMany(
+        { user: req.user._id, activeRole: { $ne: req.body.activeRole } },
+        { $set: { activeRole: "" } }
+      );
       profile = await Profiles.findById(profile._id);
       return res
-      .status(200)
-      .send({ message: constant.PROFILE_UPDATE, profile });
+        .status(200)
+        .send({ message: constant.PROFILE_UPDATE, profile });
     }
     req.body.user = req.user._id;
     profile = await Profiles.create(req.body);
-    await Profiles.updateMany({ user: req.user._id, activeRole: {$ne: req.body.activeRole}}, {$set:{activeRole:''}});
+    await Profiles.updateMany(
+      { user: req.user._id, activeRole: { $ne: req.body.activeRole } },
+      { $set: { activeRole: "" } }
+    );
     return res.status(200).send({ message: constant.PROFILE_UPDATE, profile });
   } catch (error) {
     console.error(error);
@@ -251,7 +257,12 @@ exports.create = async (req, res) => {
 /**GET User */
 exports.get = async (req, res) => {
   try {
-    let users = await User.find({role:{$ne:"admin"}}).exec();
+    // let users = await User.find({role:{$ne:"admin"}}).exec();
+    let users = await User.find({ role: { $ne: "admin" }, isDeleted: false })
+      .sort({ _id: -1 })
+      .limit(parseInt(req.params.limit) || 10)
+      .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+      .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
@@ -264,7 +275,7 @@ exports.get = async (req, res) => {
 /**DELETE User */
 exports.delete = async (req, res) => {
   try {
-    await User.deleteOne({ _id: req.params.id });
+    await User.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_USER });

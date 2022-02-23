@@ -79,7 +79,12 @@ exports.update = async (req, res) => {
 /**GET Blogs */
 exports.get = async (req, res) => {
   try {
-    let blogs = await Blogs.find().exec();
+    // let blogs = await Blogs.find().exec();
+    let blogs = await Blogs.find({isDeleted: false})
+    .sort({ _id: -1 })
+    .limit(parseInt(req.params.limit) || 10)
+    .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+    .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, blogs });
@@ -92,7 +97,7 @@ exports.get = async (req, res) => {
 /**DELETE Blog */
 exports.delete = async (req, res) => {
   try {
-    await Blogs.deleteOne({ _id: req.params.id });
+    await Blogs.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_BLOG });

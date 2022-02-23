@@ -54,11 +54,11 @@ exports.update = async (req, res) => {
 /**GET Ambassador */
 exports.get = async (req, res) => {
   try {
-    let ambassador = await Ambassador.find().exec();
-    let companies = await Ambassador.find()
+    // let ambassador = await Ambassador.find().exec();
+    let ambassador = await Ambassador.find({isDeleted: false})
       .sort({ _id: -1 })
-      .limit(parseInt(req.body.limit) || 10)
-      .skip(parseInt(req.body.limit) * (parseInt(req.body.offset) - 1))
+      .limit(parseInt(req.params.limit) || 10)
+      .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
       .exec();
     return res
       .status(200)
@@ -72,7 +72,7 @@ exports.get = async (req, res) => {
 /**DELETE Ambassador */
 exports.delete = async (req, res) => {
   try {
-    await Ambassador.deleteOne({ _id: req.params.id });
+    await Ambassador.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_AMBASSADOR });

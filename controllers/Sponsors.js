@@ -51,7 +51,12 @@ exports.update = async (req, res) => {
 /**GET Sponsors */
 exports.get = async (req, res) => {
   try {
-    let sponsors = await Sponsors.find().exec();
+    // let sponsors = await Sponsors.find().exec();
+    let sponsors = await Sponsors.find({isDeleted: false})
+    .sort({ _id: -1 })
+    .limit(parseInt(req.params.limit) || 10)
+    .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+    .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, sponsors });
@@ -64,7 +69,7 @@ exports.get = async (req, res) => {
 /**DELETE Sponsors */
 exports.delete = async (req, res) => {
   try {
-    await Sponsors.deleteOne({ _id: req.params.id });
+    await Sponsors.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_COLLABORATOR });

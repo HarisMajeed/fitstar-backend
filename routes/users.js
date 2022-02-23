@@ -62,7 +62,7 @@ router.post("/create", adminAuth, userCreate, function (req, res) {
   userController.create(req, res);
 });
 
-router.get("/all", adminAuth, function (req, res) {
+router.get("/all/:limit/:offset", adminAuth, function (req, res) {
   userController.get(req, res);
 });
 

@@ -51,7 +51,12 @@ exports.update = async (req, res) => {
 /**GET Collaborator */
 exports.get = async (req, res) => {
   try {
-    let collaborators = await Collaborators.find().exec();
+    // let collaborators = await Collaborators.find().exec();
+    let collaborators = await Collaborators.find({isDeleted: false})
+    .sort({ _id: -1 })
+    .limit(parseInt(req.params.limit) || 10)
+    .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+    .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, collaborators });
@@ -64,7 +69,7 @@ exports.get = async (req, res) => {
 /**DELETE Collaborator */
 exports.delete = async (req, res) => {
   try {
-    await Collaborators.deleteOne({ _id: req.params.id });
+    await Collaborators.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_COLLABORATOR });

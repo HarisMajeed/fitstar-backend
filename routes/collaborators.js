@@ -12,7 +12,7 @@ router.post("/create", adminAuth, createCollaborator, function (req, res) {
   collaboratorController.create(req, res);
 });
 
-router.get("/get", adminAuth, function (req, res) {
+router.get("/get/:limit/:offset", adminAuth, function (req, res) {
   collaboratorController.get(req, res);
 });
 

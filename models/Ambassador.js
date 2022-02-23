@@ -13,7 +13,9 @@ const ambassadorSchema = new Schema(
     instagram: { type: String, default: "" },
     facebook: { type: String, default: "" },
     youtube: { type: String, default: "" },
-    tiwtter: { type: String, default: "" },
+    twitter: { type: String, default: "" },
+    active: { type: Boolean, default: true },
+    isDeleted: { type: Boolean, default: true }
   },
   { timestamps: true, versionKey: false }
 );
