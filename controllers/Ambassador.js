@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
 /**GET Ambassador */
 exports.get = async (req, res) => {
   try {
-    // let ambassador = await Ambassador.find().exec();
+    let totalRecord = await Ambassador.countDocuments({isDeleted: false});
     let ambassador = await Ambassador.find({isDeleted: false})
       .sort({ _id: -1 })
       .limit(parseInt(req.params.limit) || 10)
@@ -62,7 +62,7 @@ exports.get = async (req, res) => {
       .exec();
     return res
       .status(200)
-      .send({ status: true, message: constant.SUCCESS, ambassador });
+      .send({ status: true, message: constant.SUCCESS, totalRecord, ambassador });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });

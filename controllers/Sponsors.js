@@ -51,7 +51,7 @@ exports.update = async (req, res) => {
 /**GET Sponsors */
 exports.get = async (req, res) => {
   try {
-    // let sponsors = await Sponsors.find().exec();
+    let totalRecord = await Sponsors.countDocuments({isDeleted: false});
     let sponsors = await Sponsors.find({isDeleted: false})
     .sort({ _id: -1 })
     .limit(parseInt(req.params.limit) || 10)
@@ -59,7 +59,7 @@ exports.get = async (req, res) => {
     .exec();
     return res
       .status(200)
-      .send({ status: true, message: constant.SUCCESS, sponsors });
+      .send({ status: true, message: constant.SUCCESS, totalRecord, sponsors });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });

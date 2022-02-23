@@ -257,7 +257,7 @@ exports.create = async (req, res) => {
 /**GET User */
 exports.get = async (req, res) => {
   try {
-    // let users = await User.find({role:{$ne:"admin"}}).exec();
+    let totalRecord = await User.countDocuments({role:{$ne:"admin"},isDeleted: false});
     let users = await User.find({ role: { $ne: "admin" }, isDeleted: false })
       .sort({ _id: -1 })
       .limit(parseInt(req.params.limit) || 10)
@@ -265,7 +265,7 @@ exports.get = async (req, res) => {
       .exec();
     return res
       .status(200)
-      .send({ status: true, message: constant.SUCCESS, users });
+      .send({ status: true, message: constant.SUCCESS, totalRecord, users });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
