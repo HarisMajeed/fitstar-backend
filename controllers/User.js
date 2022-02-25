@@ -2,7 +2,7 @@ const User = require("../models/User");
 const userHelper = require("../helpers/user");
 const bcrypt = require("bcrypt");
 const constant = require("../constants/ConstantMessages");
-const { upload } = require("../utils/fileUpload");
+const file = require("../utils/fileUpload");
 const Profiles = require("../models/Profiles");
 
 /**update basic info and active role of user */
