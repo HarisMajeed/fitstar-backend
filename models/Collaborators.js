@@ -13,7 +13,7 @@ const collaboratorSchema = new Schema(
     youtube: { type: String, default: "" },
     twitter: { type: String, default: "" },
     active: { type: Boolean, default: true },
-    isDeleted: { type: Boolean, default: true }
+    isDeleted: { type: Boolean, default: false }
   },
   { timestamps: true, versionKey: false }
 );

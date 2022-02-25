@@ -26,7 +26,7 @@ const blogSchema = new Schema(
     videoLink: { type: String, default: "" },
     details: { type: String, default: "" },
     active: { type: Boolean, default: true },
-    isDeleted: { type: Boolean, default: true }
+    isDeleted: { type: Boolean, default: false }
   },
   { timestamps: true, versionKey: false }
 );
