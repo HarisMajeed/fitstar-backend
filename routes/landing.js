@@ -12,7 +12,7 @@ router.put("/update/:id", adminAuth,  function (req, res) {
     landingController.update(req, res);
 });
 
-router.get("/get", adminAuth, function (req, res) {
+router.get("/get", function (req, res) {
     landingController.get(req, res);
 });
 
