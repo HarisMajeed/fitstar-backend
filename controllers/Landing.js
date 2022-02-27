@@ -5,22 +5,38 @@ const file = require("../utils/fileUpload");
 /**Update LandingPage */
 exports.update = async (req, res) => {
   try {
-    if (req.body.bannerImage) {
-      req.body.bannerImage = await file.upload(
-        req.body.bannerImage,
-        "",
-        constant.FITSTAR_BUCKET.landing
-      );
+    let allImages = [];
+    let banners = [];
+    if (req.body.landingPage) {
+      banners = req.body.landingPage.map(async (item) => {
+        return file.upload(
+          item.bannerImage ? item.bannerImage : "",
+          "",
+          constant.FITSTAR_BUCKET.landing
+        );
+      });
+      allImages = await Promise.all(banners);
+      allImages.forEach((item, i) => {
+        req.body.landingPage[i].bannerImage = item;
+      });
+      /** End */
     }
 
-    if (req.body.aboutUsBannerImage) {
+    console.log("Landding Response", req.body.landingPage);
+    if (
+      req.body.aboutPageDetails &&
+      req.body.aboutPageDetails.aboutUsBannerImage
+    ) {
       req.body.aboutUsBannerImage = await file.upload(
-        req.body.aboutUsBannerImage,
+        req.body.aboutPageDetails.aboutUsBannerImage,
         "",
         constant.FITSTAR_BUCKET.landing
       );
     }
-    const landingPage = await LandingPage.updateOne({ _id: req.params.id }, req.body);
+    const landingPage = await LandingPage.updateOne(
+      { _id: req.params.id },
+      req.body
+    );
     if (!landingPage) {
       return res
         .status(500)
@@ -39,7 +55,7 @@ exports.get = async (req, res) => {
     let landingPage = await LandingPage.find().exec();
     return res
       .status(200)
-      .send({ status: true, message: constant.SUCCESS, landingPage });
+      .send({ status: true, message: constant.SUCCESS, data:landingPage[0]?landingPage[0]:{} });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
