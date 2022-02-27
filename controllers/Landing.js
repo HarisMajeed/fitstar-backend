@@ -27,7 +27,7 @@ exports.update = async (req, res) => {
       req.body.aboutPageDetails &&
       req.body.aboutPageDetails.aboutUsBannerImage
     ) {
-      req.body.aboutUsBannerImage = await file.upload(
+      req.body.aboutPageDetails.aboutUsBannerImage = await file.upload(
         req.body.aboutPageDetails.aboutUsBannerImage,
         "",
         constant.FITSTAR_BUCKET.landing
