@@ -12,6 +12,7 @@ const collaboratorRouter = require('./routes/collaborators');
 const sponsorsRouter = require('./routes/sponsors');
 const landingRouter = require('./routes/landing');
 const ambassadorRouter = require('./routes/ambassador');
+const dashboardRouter = require('./routes/dashboard');
 const app = express();
  
 app.use(cors());
@@ -45,6 +46,7 @@ app.use('/app/v1/collaborators', collaboratorRouter);
 app.use('/app/v1/sponsors', sponsorsRouter);
 app.use('/app/v1/landing', landingRouter);
 app.use('/app/v1/ambassadors', ambassadorRouter);
+app.use('/app/v1/dashboard', dashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
