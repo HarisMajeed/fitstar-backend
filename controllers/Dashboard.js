@@ -19,9 +19,11 @@ exports.cards = async (req, res) => {
       Sponsors.countDocuments({ isDeleted: false }),
       Collaborators.countDocuments({ isDeleted: false }),
     ]);
+
+    let [totalAmbassadors,totalUsers,totalBlogs,totalSponsor,totalCollaborator] = promises;
     return res
     .status(200)
-    .send({ status: true, message: constant.SUCCESS, promises });
+    .send({ status: true, message: constant.SUCCESS,  totalAmbassadors,totalUsers,totalBlogs,totalSponsor,totalCollaborator});
   } catch (error) {
     console.error("Admin Dashboard", error);
     return res.status(500).send({ message: error.message });
@@ -29,16 +31,16 @@ exports.cards = async (req, res) => {
 };
 
 /**GET Latest User */
-exports.getLatestUSers = async (req, res) => {
+exports.getLatestUsers = async (req, res) => {
     try {
-      let users = await User.find({ role: { $ne: "admin" }, isDeleted: false })
+      let latestUsers = await User.find({ role: { $ne: "admin" }, isDeleted: false })
         .sort({ _id: -1 })
         .limit(5)
         .skip(0)
         .exec();
       return res
         .status(200)
-        .send({ status: true, message: constant.SUCCESS, users });
+        .send({ status: true, message: constant.SUCCESS, latestUsers });
     } catch (error) {
       console.log("ERROR:::", error);
       return res.status(500).json({ status: false, message: error.message });

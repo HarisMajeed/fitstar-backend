@@ -12,7 +12,7 @@ router.get("/cards", adminAuth, function (req, res) {
   dashboardController.cards(req, res);
 });
 router.get("/latest/users", adminAuth, function (req, res) {
-  dashboardController.getLatestUSers(req, res);
+  dashboardController.getLatestUsers(req, res);
 });
 
 module.exports = router;
