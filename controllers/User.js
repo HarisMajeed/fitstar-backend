@@ -198,14 +198,14 @@ exports.emailUpdate = async (req, res) => {
   }
 };
 
-exports.updateAddress = async (req, res) => {
+exports.updateStatus = async (req, res) => {
   try {
     let body = req.body;
     let user = await User.findById({ _id: req.params.id });
     if (user) {
-      user.publicAddress = body.publicAddress;
+      user.status = body.status;
       await user.save();
-      return res.status(200).send({ message: "Address successfully added." });
+      return res.status(200).send({ message: constant.UPDATE_USER });
     } else {
       return res.status(401).send({ message: "Invalid user" });
     }

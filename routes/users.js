@@ -46,8 +46,8 @@ router.put("/update/email/:id", auth, emailUpdate, function (req, res) {
   userController.emailUpdate(req, res);
 });
 
-router.put("/update/address/:id", auth, addressUpdate, function (req, res) {
-  userController.updateAddress(req, res);
+router.put("/update/status/:id", adminAuth, function (req, res) {
+  userController.updateStatus(req, res);
 });
 
 router.put("/email/check/:email", auth, function (req, res) {
