@@ -14,5 +14,8 @@ router.get("/cards", adminAuth, function (req, res) {
 router.get("/latest/users", adminAuth, function (req, res) {
   dashboardController.getLatestUsers(req, res);
 });
+router.get("/graph/data", adminAuth, function (req, res) {
+  dashboardController.getGraphData(req, res);
+});
 
 module.exports = router;

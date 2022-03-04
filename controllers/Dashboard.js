@@ -20,10 +20,24 @@ exports.cards = async (req, res) => {
       Collaborators.countDocuments({ isDeleted: false }),
     ]);
 
-    let [totalAmbassadors,totalUsers,totalBlogs,totalSponsor,totalCollaborator] = promises;
+    let [
+      totalAmbassadors,
+      totalUsers,
+      totalBlogs,
+      totalSponsor,
+      totalCollaborator,
+    ] = promises;
     return res
-    .status(200)
-    .send({ status: true, message: constant.SUCCESS,  totalAmbassadors,totalUsers,totalBlogs,totalSponsor,totalCollaborator});
+      .status(200)
+      .send({
+        status: true,
+        message: constant.SUCCESS,
+        totalAmbassadors,
+        totalUsers,
+        totalBlogs,
+        totalSponsor,
+        totalCollaborator,
+      });
   } catch (error) {
     console.error("Admin Dashboard", error);
     return res.status(500).send({ message: error.message });
@@ -32,17 +46,81 @@ exports.cards = async (req, res) => {
 
 /**GET Latest User */
 exports.getLatestUsers = async (req, res) => {
-    try {
-      let latestUsers = await User.find({ role: { $ne: "admin" }, isDeleted: false })
-        .sort({ _id: -1 })
-        .limit(5)
-        .skip(0)
-        .exec();
-      return res
-        .status(200)
-        .send({ status: true, message: constant.SUCCESS, latestUsers });
-    } catch (error) {
-      console.log("ERROR:::", error);
-      return res.status(500).json({ status: false, message: error.message });
-    }
-  };
+  try {
+    let latestUsers = await User.find({
+      role: { $ne: "admin" },
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
+      .limit(5)
+      .skip(0)
+      .exec();
+    return res
+      .status(200)
+      .send({ status: true, message: constant.SUCCESS, latestUsers });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+/**GET Graph data Users */
+exports.getGraphData = async (req, res) => {
+  try {
+    let userData = await User.aggregate([
+      {
+        $match: {
+          isDeleted: false,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: {
+              $month: "$createdAt",
+            },
+          },
+          total: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+    userData.sort((a, b) => a._id.month - b._id.month);
+    let months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      labels = [],
+      data = [];
+    setGraphdata(userData, months, labels, data);
+    return res
+      .status(200)
+      .send({
+        message: constant.SUCCESS,
+        labels,
+        data,
+      });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+
+function setGraphdata(graphData, months, labels, data) {
+  graphData.forEach(item => {
+      labels.push(months[item._id.month - 1]);
+      data.push(JSON.parse(item.total));
+  });
+}
