@@ -78,4 +78,8 @@ router.get("/search/:search", adminAuth, function (req, res) {
   userController.search(req, res);
 });
 
+router.get("/fitstars/list", function (req, res) {
+  userController.searchUserByRole(req, res);
+});
+
 module.exports = router;

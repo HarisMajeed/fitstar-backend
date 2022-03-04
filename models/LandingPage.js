@@ -28,7 +28,8 @@ const landingPageSchema = new Schema(
     },
     footerDetails:{
       footerDetails: { type: String, default: "Description of Our site on Footer area " },
-      footerPhone: { type: String, default: "+93002739370120" }
+      footerPhone: { type: String, default: "+93002739370120" },
+      footerEmail: { type: String, default: "inf@fitstar.com" }
     },
     termConditions:{
       termsAndConditions: { type: String, default:"Strict Role for Development " }

@@ -257,7 +257,10 @@ exports.create = async (req, res) => {
 /**GET User */
 exports.get = async (req, res) => {
   try {
-    let totalRecord = await User.countDocuments({role:{$ne:"admin"},isDeleted: false});
+    let totalRecord = await User.countDocuments({
+      role: { $ne: "admin" },
+      isDeleted: false,
+    });
     let users = await User.find({ role: { $ne: "admin" }, isDeleted: false })
       .sort({ _id: -1 })
       .limit(parseInt(req.params.limit) || 10)
@@ -310,6 +313,45 @@ exports.getByRole = async (req, res) => {
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+/**Landing page Search user by role */
+
+exports.searchUserByRole = async (req, res) => {
+  try {
+    console.log("REQ::::::::::", req.query.role);
+    let profileList = await Profiles.aggregate([
+      {
+        $match: {
+          $or: [
+            // { fullName: { $regex: req.query.search?req.query.search:'', $options: "i" } },
+            { role: req.query.role  },
+            // { location: req.query.location }
+          ]
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+    return res
+      .status(200)
+      .send({ status: true, message: constant.RETRIEVE_USER, profileList });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
