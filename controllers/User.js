@@ -309,7 +309,7 @@ exports.search = async (req, res) => {
 /**GET User By role */
 exports.getByRole = async (req, res) => {
   try {
-    let users = await User.find({ role: req.params.role });
+    let users = await User.find({ role: req.params.role },'-password ');
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });

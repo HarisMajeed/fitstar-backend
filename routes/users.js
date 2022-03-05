@@ -66,7 +66,7 @@ router.get("/all/:limit/:offset", adminAuth, function (req, res) {
   userController.get(req, res);
 });
 
-router.get("/get/:role", adminAuth, function (req, res) {
+router.get("/get/:role", function (req, res) {
   userController.getByRole(req, res);
 });
 
