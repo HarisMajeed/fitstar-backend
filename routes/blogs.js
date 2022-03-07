@@ -17,6 +17,10 @@ router.get("/get/:limit/:offset", adminAuth, function (req, res) {
   blogController.get(req, res);
 });
 
+router.get("/get/:category", function (req, res) {
+  blogController.getByCategory(req, res);
+});
+
 router.put("/update/:id", adminAuth, function (req, res) {
   blogController.update(req, res);
 });

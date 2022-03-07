@@ -79,12 +79,12 @@ exports.update = async (req, res) => {
 /**GET Blogs */
 exports.get = async (req, res) => {
   try {
-    let totalRecord = await Blogs.countDocuments({isDeleted: false});
-    let blogs = await Blogs.find({isDeleted: false})
-    .sort({ _id: -1 })
-    .limit(parseInt(req.params.limit) || 10)
-    .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
-    .exec();
+    let totalRecord = await Blogs.countDocuments({ isDeleted: false });
+    let blogs = await Blogs.find({ isDeleted: false })
+      .sort({ _id: -1 })
+      .limit(parseInt(req.params.limit) || 10)
+      .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+      .exec();
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, totalRecord, blogs });
@@ -94,10 +94,29 @@ exports.get = async (req, res) => {
   }
 };
 
+/**GET By Category Blogs */
+exports.getByCategory = async (req, res) => {
+  try {
+    let blogs = await Blogs.find({
+      category: req.params.category,
+      isDeleted: false,
+    }).exec();
+    return res
+      .status(200)
+      .send({ status: true, message: constant.SUCCESS, blogs });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
 /**DELETE Blog */
 exports.delete = async (req, res) => {
   try {
-    await Blogs.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
+    await Blogs.updateOne(
+      { _id: req.params.id },
+      { $set: { isDeleted: true } }
+    );
     return res
       .status(200)
       .send({ status: true, message: constant.DELETE_BLOG });
@@ -112,8 +131,8 @@ exports.search = async (req, res) => {
   try {
     let blogs = await Blogs.find({
       $or: [
-        {title: { $regex: req.params.search, $options: 'i' } },
-        { description: { $regex: req.params.search, $options: 'i' } },
+        { title: { $regex: req.params.search, $options: "i" } },
+        { description: { $regex: req.params.search, $options: "i" } },
       ],
     });
     return res
