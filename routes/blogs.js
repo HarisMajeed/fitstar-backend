@@ -13,7 +13,7 @@ router.post("/create", adminAuth, createBlog, function (req, res) {
   blogController.create(req, res);
 });
 
-router.get("/get/:limit/:offset", adminAuth, function (req, res) {
+router.get("/get/:limit/:offset", function (req, res) {
   blogController.get(req, res);
 });
 

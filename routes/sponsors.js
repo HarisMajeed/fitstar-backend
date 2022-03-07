@@ -12,7 +12,7 @@ router.post("/create", adminAuth,  function (req, res) {
   sponsorsController.create(req, res);
 });
 
-router.get("/get/:limit/:offset", adminAuth, function (req, res) {
+router.get("/get/:limit/:offset", function (req, res) {
   sponsorsController.get(req, res);
 });
 

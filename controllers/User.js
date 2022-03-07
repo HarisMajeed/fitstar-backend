@@ -309,7 +309,13 @@ exports.search = async (req, res) => {
 /**GET User By role */
 exports.getByRole = async (req, res) => {
   try {
-    let users = await User.find({ role: req.params.role });
+    let users = await Profiles.find({ role: req.params.role},'image -_id').populate('user', '-password');
+    users = users.map(item=>{
+      let user = item.user.toObject();
+      user.image = item.image;
+      delete item.image;
+      return user;
+    })
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
