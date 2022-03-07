@@ -97,7 +97,14 @@ exports.get = async (req, res) => {
 /**GET By Category Blogs */
 exports.getByCategory = async (req, res) => {
   try {
-    let blogs = await Blogs.find({
+    let blogs;
+    if (req.params.category == "All") {
+      blogs = await Blogs.find({ isDeleted: false }).exec();
+      return res
+        .status(200)
+        .send({ status: true, message: constant.SUCCESS, blogs });
+    }
+    blogs = await Blogs.find({
       category: req.params.category,
       isDeleted: false,
     }).exec();
