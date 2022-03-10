@@ -58,7 +58,7 @@ exports.get = async (req, res) => {
     let ambassador = await Ambassador.find({isDeleted: false})
       .sort({ _id: -1 })
       .limit(parseInt(req.params.limit) || 10)
-      .skip(parseInt(req.params.limit) * (parseInt(req.params.offset) - 1))
+      .skip((parseInt(req.params.offset) - 1))
       .exec();
     return res
       .status(200)
