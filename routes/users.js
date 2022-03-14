@@ -54,7 +54,7 @@ router.put("/email/check/:email", auth, function (req, res) {
   userController.emailCheck(req, res);
 });
 
-router.get("/get", auth, function (req, res) {
+router.get("/my/profile", auth, function (req, res) {
   userController.getProfile(req, res);
 });
 

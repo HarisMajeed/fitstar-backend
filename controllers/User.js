@@ -133,11 +133,11 @@ exports.profileContactUs = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    let user = await Profiles.findOne({
+    let myProfile = await Profiles.findOne({
       user: req.user._id,
-      activeRole: req.params.role,
+      activeRole:{$ne:''},
     });
-    return res.status(200).send({ message: constant.SUCCESS, user: user[0] });
+    return res.status(200).send({ message: constant.SUCCESS, myProfile });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
