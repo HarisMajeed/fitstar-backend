@@ -19,6 +19,13 @@ const proAboutSchema = new Schema({
     languages: [String],
     trainingMethodsAndStyles: { type: String, default: "" },
     fitnessAward: [String],
+    productsRating: [
+      {
+        product: { type: String, default: "" },
+        review: { type: String, default: "" },
+        starts: { type: Number, default: 0 },
+      },
+    ],
   },
   personal: {
     name: { type: String, default: "" },
@@ -59,8 +66,8 @@ const proAboutSchema = new Schema({
 const centerAboutSchema = new Schema({
   openSince: { type: Number, default: 0 },
   fitnessCenterType: { type: String, default: "" },
-  language: { type: String, default: "" },
-  specialities: { type: String, default: "" },
+  language: [],
+  specialities: [],
   hoursOfOperation: { type: Number, default: 0 },
   accomplishments: { type: String, default: "" },
   ourFitnessPro: [],
