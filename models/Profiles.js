@@ -14,11 +14,11 @@ const proAboutSchema = new Schema({
     degree: { type: String, default: "" },
     professions: { type: String, default: "" },
     experience: { type: String, default: "" },
-    certification: [String],
+    certification: [],
     specialities: { type: Number, default: 0 },
-    languages: [String],
+    languages: [],
     trainingMethodsAndStyles: { type: String, default: "" },
-    fitnessAward: [String],
+    fitnessAward: [],
     productsRating: [
       {
         product: { type: String, default: "" },
