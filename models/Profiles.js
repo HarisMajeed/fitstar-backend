@@ -72,6 +72,7 @@ const centerAboutSchema = new Schema({
   accomplishments: { type: String, default: "" },
   ourFitnessPro: [],
   ourStory: { type: String, default: "" },
+  membership:{type:String, default:""},
   productsRating: [
     {
       product: { type: String, default: "" },
@@ -101,9 +102,9 @@ const modelAboutSchema = new Schema({
   tattoos: { type: String, default: "" },
   piercings: { type: String, default: "" },
   experience: { type: String, default: "" },
-  languages: [String],
+  languages: [],
   workingWithMedia: { type: Boolean, default: false },
-  modelingInterest: [String],
+  modelingInterest: [],
   compensation: { type: String, default: "" },
   noteAboutCompensation: { type: String, default: "" },
   activites: [],
