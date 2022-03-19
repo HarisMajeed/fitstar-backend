@@ -14,11 +14,11 @@ const proAboutSchema = new Schema({
     degree: { type: String, default: "" },
     professions: { type: String, default: "" },
     experience: { type: String, default: "" },
-    certification: [String],
+    certification: [],
     specialities: { type: Number, default: 0 },
-    languages: [String],
+    languages: [],
     trainingMethodsAndStyles: { type: String, default: "" },
-    fitnessAward: [String],
+    fitnessAward: [],
     productsRating: [
       {
         product: { type: String, default: "" },
@@ -72,6 +72,7 @@ const centerAboutSchema = new Schema({
   accomplishments: { type: String, default: "" },
   ourFitnessPro: [],
   ourStory: { type: String, default: "" },
+  membership:{type:String, default:""},
   productsRating: [
     {
       product: { type: String, default: "" },
@@ -101,9 +102,9 @@ const modelAboutSchema = new Schema({
   tattoos: { type: String, default: "" },
   piercings: { type: String, default: "" },
   experience: { type: String, default: "" },
-  languages: [String],
+  languages: [],
   workingWithMedia: { type: Boolean, default: false },
-  modelingInterest: [String],
+  modelingInterest: [],
   compensation: { type: String, default: "" },
   noteAboutCompensation: { type: String, default: "" },
   activites: [],
