@@ -22,6 +22,35 @@ exports.profileBasic = async (req, res) => {
         constant.FITSTAR_BUCKET.user
       );
     }
+    let beforePromises = [];
+    let afterPromises = [];
+    let beforePromisesRes = [];
+    let afterPromisesRes = [];
+    if (req.body.portfolio) {
+      beforePromises = req.body.portfolio.map(async (item) => {
+        return file.upload(
+          item.imageBefore ? item.imageBefore : "",
+          "",
+          constant.FITSTAR_BUCKET.user
+        );
+      });
+      beforePromisesRes = await Promise.all(beforePromises);
+      beforePromisesRes.forEach((item, i) => {
+        req.body.portfolio[i].imageBefore = item;
+      });
+      afterPromises = req.body.portfolio.map(async (item) => {
+        return file.upload(
+          item.imageAfter ? item.imageAfter : "",
+          "",
+          constant.FITSTAR_BUCKET.user
+        );
+      });
+      afterPromisesRes = await Promise.all(afterPromises);
+      afterPromisesRes.forEach((item, i) => {
+        req.body.portfolio[i].imageAfter = item;
+      });
+      /** End */
+    }
     req.body.activeRole = req.body.role;
     if (profile) {
       await Profiles.updateOne({ _id: profile._id }, req.body);
@@ -135,7 +164,7 @@ exports.getProfile = async (req, res) => {
   try {
     let myProfile = await Profiles.findOne({
       user: req.user._id,
-      activeRole:{$ne:''},
+      activeRole: { $ne: "" },
     });
     return res.status(200).send({ message: constant.SUCCESS, myProfile });
   } catch (error) {
@@ -264,7 +293,7 @@ exports.get = async (req, res) => {
     let users = await User.find({ role: { $ne: "admin" }, isDeleted: false })
       .sort({ _id: -1 })
       .limit(parseInt(req.params.limit) || 10)
-      .skip((parseInt(req.params.offset) - 1))
+      .skip(parseInt(req.params.offset) - 1)
       .exec();
     return res
       .status(200)
@@ -309,13 +338,16 @@ exports.search = async (req, res) => {
 /**GET User By role */
 exports.getByRole = async (req, res) => {
   try {
-    let users = await Profiles.find({ role: req.params.role},'image -_id').populate('user', '-password');
-    users = users.map(item=>{
+    let users = await Profiles.find(
+      { role: req.params.role },
+      "image -_id"
+    ).populate("user", "-password");
+    users = users.map((item) => {
       let user = item.user.toObject();
       user.image = item.image;
       delete item.image;
       return user;
-    })
+    });
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
@@ -335,9 +367,9 @@ exports.searchUserByRole = async (req, res) => {
         $match: {
           $or: [
             // { fullName: { $regex: req.query.search?req.query.search:'', $options: "i" } },
-            { role: req.query.role  },
+            { role: req.query.role },
             // { location: req.query.location }
-          ]
+          ],
         },
       },
       {
