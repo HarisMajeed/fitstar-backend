@@ -338,16 +338,13 @@ exports.search = async (req, res) => {
 /**GET User By role */
 exports.getByRole = async (req, res) => {
   try {
-    let users = await Profiles.find(
-      { role: req.params.role },
-      "image -_id"
-    ).populate("user", "-password");
-    users = users.map((item) => {
-      let user = item.user.toObject();
-      user.image = item.image;
-      delete item.image;
-      return user;
-    });
+    let users = await Profiles.find({ role: req.params.role });
+    // users = users.map((item) => {
+    //   let user = item.user.toObject();
+    //   user.image = item.image;
+    //   // delete item.image;
+    //   return item;
+    // });
     return res
       .status(200)
       .send({ status: true, message: constant.SUCCESS, users });
@@ -361,35 +358,46 @@ exports.getByRole = async (req, res) => {
 
 exports.searchUserByRole = async (req, res) => {
   try {
-    console.log("REQ::::::::::", req.query.role);
-    let profileList = await Profiles.aggregate([
+    console.log("REQ::::::::::", req.query);
+    let specialityQuery = {};
+    if (req.query.role == "pro") {
+      specialityQuery = {
+        "proAbout.qualifications.specialities": {
+          $in: req.query.specialities ? req.query.specialities : [],
+        },
+      };
+    }
+    if (req.query.role == "center") {
+      specialityQuery = {
+        $in: req.query.specialities ? req.query.specialities : [],
+      };
+    }
+    let users = await Profiles.aggregate([
       {
         $match: {
           $or: [
-            // { fullName: { $regex: req.query.search?req.query.search:'', $options: "i" } },
-            { role: req.query.role },
-            // { location: req.query.location }
+            {
+              role: req.query.role?req.query.role:'',
+            },
+            {
+              fullName: {
+                $regex: req.query.name ? req.query.name : "",
+                $options: "i",
+              },
+            },
+            {
+              location: {
+                $regex: req.query.location ? req.query.location : "",
+              },
+            },
+            specialityQuery
           ],
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: {
-          path: "$user",
-          preserveNullAndEmptyArrays: true,
         },
       },
     ]);
     return res
       .status(200)
-      .send({ status: true, message: constant.RETRIEVE_USER, profileList });
+      .send({ status: true, message: constant.RETRIEVE_USER, users });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
