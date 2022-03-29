@@ -135,18 +135,23 @@ exports.delete = async (req, res) => {
 
 /**Search Blog */
 exports.search = async (req, res) => {
-  try {
-    let blogs = await Blogs.find({
-      $or: [
-        { title: { $regex: req.params.search, $options: "i" } },
-        { description: { $regex: req.params.search, $options: "i" } },
-      ],
-    });
+   try {
+      let searchItem = req.params.search
+      let totalRecords = await Blogs.countDocuments({isDeleted: false})
+      let blogs = await Blogs.find({
+        $or: [
+          { title: { $regex: searchItem, $options: "i" } },
+          { description: { $regex: searchItem, $options: "i" } },
+        ],
+      })
+      .sort({ _id: -1 })
+      .limit(parseInt(req.params.limit) || 10)
+      .skip((parseInt(req.params.offset) - 1))
+      .exec();
     return res
       .status(200)
-      .send({ status: true, message: constant.RETRIEVE_BLOG, blogs });
+      .send({ status: true, message: constant.SUCCESS, totalRecords, blogs });
   } catch (error) {
-    console.log("ERROR:::", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };

@@ -310,12 +310,6 @@ exports.getByRole = async (req, res) => {
 	console.log('user by role', req.params);
 	try {
 		let users = await Profiles.find({ role: req.params.role });
-		// users = users.map((item) => {
-		//   let user = item.user.toObject();
-		//   user.image = item.image;
-		//   // delete item.image;
-		//   return item;
-		// });
 		return res.status(200).send({ status: true, message: constant.SUCCESS, users });
 	} catch (error) {
 		console.log('ERROR:::', error);
@@ -329,8 +323,10 @@ exports.searchUserByRole = async (req, res) => {
 	console.log('Query::', req.query);
 	try {
 		const userName = req.query.name;
+		console.log(userName)
 		const userLocation = req.query.location;
 		const role = req.query.role;
+		console.log(role)
 		let specialityQuery = {};
 		if (role == 'pro') {
 			specialityQuery = {
@@ -341,7 +337,8 @@ exports.searchUserByRole = async (req, res) => {
 		}
 		if (role == 'center') {
 			specialityQuery = {
-				'centerAbout.fitnessCenterType':  req.params.centertype	}
+				'centerAbout.fitnessCenterType': req.params.centertype
+			};
 		}
 		if (role == 'model') {
 			specialityQuery = {
@@ -351,28 +348,20 @@ exports.searchUserByRole = async (req, res) => {
 			};
 		}
 		let users = await Profiles.aggregate([
-			{
-				$match: {
-					$or: [
+			{	
+				"$match":{
+					"$or":[
 						{
-							role: role ? role : ''
-						},
-						{
-							fullName: {
-								$regex: userName ? userName : '',
-								$options: 'i'
-							}
-						},
-						{
-							location: {
-								$regex: userLocation ? userLocation : ''
-							}
+							"$or":[
+						     	{"firstName":userName ? userName : ""},
+						     	{"location":userLocation ? userName: ""}
+						      ]
 						},
 						specialityQuery
 					]
 				}
 			}
-		]);
+		])
 		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, users });
 	} catch (error) {
 		console.log('ERROR:::', error);
@@ -380,7 +369,19 @@ exports.searchUserByRole = async (req, res) => {
 	}
 };
 
-exports.getUsers = async (req, res) => {
-	res.json('from get users');
-	console.log(req);
+exports.getUserByRole = async (req, res) => {
+		try {
+		   let searchItem = req.params.role
+		   let totalRecords = await Profiles.countDocuments({isDeleted: false})
+		   let users = await Profiles.find({ role: searchItem })
+		   .sort({ _id: -1 })
+		   .limit(parseInt(req.params.limit) || 10)
+		   .skip((parseInt(req.params.offset) - 1))
+		   .exec();
+		 return res
+		   .status(200)
+		   .send({ status: true, message: constant.SUCCESS, totalRecords, users });
+	   } catch (error) {
+		 return res.status(500).json({ status: false, message: error.message });
+	   }
 };
