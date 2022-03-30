@@ -139,7 +139,7 @@ exports.search = async (req, res) => {
       let searchItem = req.params.search
       let totalRecords = await Blogs.countDocuments({isDeleted: false})
       let blogs = await Blogs.find({
-        $or: [
+        $and: [
           { title: { $regex: searchItem, $options: "i" } },
           { description: { $regex: searchItem, $options: "i" } },
         ],
