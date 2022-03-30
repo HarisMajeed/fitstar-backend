@@ -292,12 +292,7 @@ exports.delete = async (req, res) => {
 /**Search User */
 exports.search = async (req, res) => {
 	try {
-		let users = await User.find({
-			$or: [
-				{ title: { $regex: req.params.search, $options: 'i' } },
-				{ description: { $regex: req.params.search, $options: 'i' } }
-			]
-		});
+		let users = await User.find({ fullName: req.params.search });
 		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, users });
 	} catch (error) {
 		console.log('ERROR:::', error);
@@ -320,49 +315,74 @@ exports.getByRole = async (req, res) => {
 /**Landing page Search user by role */
 
 exports.searchUserByRole = async (req, res) => {
-	console.log('Query::', req.query);
+	// console.log('Query::', req.query);
 	try {
-		const userName = req.query.name;
-		console.log(userName)
-		const userLocation = req.query.location;
-		const role = req.query.role;
-		console.log(role)
-		let specialityQuery = {};
-		if (role == 'pro') {
-			specialityQuery = {
-				'proAbout.qualifications.specialities': {
-					$in: [ '$req.query.speciality' ? req.query.speciality : [] ]
-				}
-			};
-		}
-		if (role == 'center') {
-			specialityQuery = {
-				'centerAbout.fitnessCenterType': req.params.centertype
-			};
-		}
-		if (role == 'model') {
-			specialityQuery = {
-				'modelAbout.modelingInterest': {
-					$in: [ '$req.query.interest' ? req.query.interest : [] ]
-				}
-			};
-		}
-		let users = await Profiles.aggregate([
-			{	
-				"$match":{
-					"$or":[
-						{
-							"$or":[
-						     	{"firstName":userName ? userName : ""},
-						     	{"location":userLocation ? userName: ""}
-						      ]
-						},
-						specialityQuery
-					]
-				}
+		// 	let userName = req.query.name;
+		// 	let userLocation = req.query.location;
+		// 	userName = userName?.toString()
+		// 	userLocation = userLocation?.toString()
+		// 	const role = req.query.role;
+		// 	console.log(role)
+		// 	let specialityQuery = {};
+		// 	if (role == 'pro') {
+		// 		specialityQuery = {
+		// 			'proAbout.qualifications.specialities': {
+		// 				$in: [ '$req.query.speciality' ? req.query.speciality : [] ]
+		// 			}
+		// 		};
+		// 	}
+		// 	if (role == 'center') {
+		// 		specialityQuery = {
+		// 			'centerAbout.fitnessCenterType': req.params.centertype
+		// 		};
+		// 	}
+		// 	if (role == 'model') {
+		// 		specialityQuery = {
+		// 			'modelAbout.modelingInterest': {
+		// 				$in: [ '$req.query.interest' ? req.query.interest : [] ]
+		// 			}
+		// 		};
+		// 	}
+		// 	let users = await Profiles.aggregate([
+		// 		{
+		// 			$match: {
+		// 				$or: [
+		// 					{
+		// 						fullName: {
+		// 							$regex: userName,
+		// 							$options: 'i'
+		// 						}
+		// 					},
+		// 					{
+		// 						location: {
+		// 							$regex: userLocation,
+		// 							$options: 'i'
+		// 						}
+		// 					},
+		// 					specialityQuery
+		// 				]
+		// 			}
+		// 		}
+		// 	]);
+
+		let users = await Profiles.find({ role: 'pro' });
+		let arr = [];
+		users.map((item) => {
+			if (
+				item.location === 'islamabad' &&
+				item.proAbout.qualifications.specialities.map((item) => {
+                       if(item === 'aerobics') {
+						   return item
+					   }
+				})
+			  && item.fullName === 'Hamza'
+			) 
+			{
+				arr.push(item);
 			}
-		])
-		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, users });
+		});
+		res.json(arr);
+		//	return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, arr });
 	} catch (error) {
 		console.log('ERROR:::', error);
 		return res.status(500).json({ status: false, message: error.message });
@@ -370,18 +390,16 @@ exports.searchUserByRole = async (req, res) => {
 };
 
 exports.getUserByRole = async (req, res) => {
-		try {
-		   let searchItem = req.params.role
-		   let totalRecords = await Profiles.countDocuments({isDeleted: false})
-		   let users = await Profiles.find({ role: searchItem })
-		   .sort({ _id: -1 })
-		   .limit(parseInt(req.params.limit) || 10)
-		   .skip((parseInt(req.params.offset) - 1))
-		   .exec();
-		 return res
-		   .status(200)
-		   .send({ status: true, message: constant.SUCCESS, totalRecords, users });
-	   } catch (error) {
-		 return res.status(500).json({ status: false, message: error.message });
-	   }
+	try {
+		let searchItem = req.params.role;
+		let totalRecords = await Profiles.countDocuments({ isDeleted: false });
+		let users = await Profiles.find({ role: searchItem })
+			.sort({ _id: -1 })
+			.limit(parseInt(req.params.limit) || 10)
+			.skip(parseInt(req.params.offset) - 1)
+			.exec();
+		return res.status(200).send({ status: true, message: constant.SUCCESS, totalRecords, users });
+	} catch (error) {
+		return res.status(500).json({ status: false, message: error.message });
+	}
 };
