@@ -66,10 +66,6 @@ router.get("/all/:limit/:offset", adminAuth, function (req, res) {
   userController.get(req, res);
 });
 
-router.get("/get/:role", function (req, res) {
-  userController.getByRole(req, res);
-});
-
 router.delete("/delete/:id", adminAuth, function (req, res) {
   userController.delete(req, res);
 });
@@ -81,5 +77,10 @@ router.get("/search/:search", adminAuth, function (req, res) {
 router.get("/fitstars/list", function (req, res) {
   userController.searchUserByRole(req, res);
 });
+
+router.get("/get/:role/:limit/:offset", function (req, res) {
+  userController.getUserByRole(req, res);
+});
+
 
 module.exports = router;
