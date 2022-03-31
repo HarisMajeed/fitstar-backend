@@ -330,52 +330,47 @@ exports.getByRole = async (req, res) => {
 /**Landing page Search user by role */
 
 exports.searchUserByRole = async (req, res) => {
-	// console.log('Query::', req.query);
+
 	try {
-		let userName = req.query.name;
-		let userLocation = req.query.location;
-		userName = userName?.toString()
-		userLocation = userLocation?.toString()
+		const {name,location,specialities}=req.query
 		const role = req.query.role;
-		console.log(role)
-		let specialityQuery = {};
-		if (role == 'pro') {
-			specialityQuery = {
+		
+		let specialityQuery = [];
+		if(role){
+			specialityQuery.push({role})
+		}
+		if(name){
+			specialityQuery.push({fullName: {
+				$regex: name,
+				$options: 'i'
+			}})
+		}
+		if(location){
+			specialityQuery.push({location: {
+				$regex: location,
+				$options: 'i'
+			}})
+		}
+		if (role == 'pro' && specialities) {
+			specialityQuery.push({
 				'proAbout.qualifications.specialities': {
-					$in: [ '$req.query.speciality' ? req.query.speciality : [] ]
+					$in: [specialities]
 				}
-			};
+			})
 		}
-		if (role == 'center') {
-			specialityQuery = {
-				'centerAbout.fitnessCenterType': req.params.centertype
-			};
-		}
-		if (role == 'model') {
-			specialityQuery = {
-				'modelAbout.modelingInterest': {
-					$in: [ '$req.query.interest' ? req.query.interest : [] ]
+		
+		if (role == 'model' && specialities) {
+			specialityQuery.push({
+				'centerAbout.centerAboutSchema.specialities': {
+					$in: [specialities]
 				}
-			};
+			})
+			
 		}
 		let users = await Profiles.aggregate([
 			{
 				$match: {
-					$or: [
-						{
-							fullName: {
-								$regex: userName,
-								$options: 'i'
-							}
-						},
-						{
-							location: {
-								$regex: userLocation,
-								$options: 'i'
-							}
-						},
-						specialityQuery
-					]
+					$and: specialityQuery
 				}
 			}
 		]);
@@ -396,7 +391,7 @@ exports.searchUserByRole = async (req, res) => {
 		// 	}
 		// });
 		///	res.json(arr);
-		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, arr });
+		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, users });
 	} catch (error) {
 		console.log('ERROR:::', error);
 		return res.status(500).json({ status: false, message: error.message });
