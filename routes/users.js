@@ -70,7 +70,7 @@ router.delete("/delete/:id", adminAuth, function (req, res) {
   userController.delete(req, res);
 });
 
-router.get("/search/:search", adminAuth, function (req, res) {
+router.get("/search/:search/:limit/:offset", adminAuth, function (req, res) {
   userController.search(req, res);
 });
 

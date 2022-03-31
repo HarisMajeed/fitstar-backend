@@ -66,6 +66,7 @@ exports.delete = async (req, res) => {
 /**Search Collaborator */
 exports.search = async (req, res) => {
 	try {
+		let totalRecord = await Collaborators.countDocuments({ isDeleted: false });
 		let searchItem = req.params.search;
 		let collaborators = await Collaborators.aggregate([
 			{
@@ -76,7 +77,10 @@ exports.search = async (req, res) => {
           ]
         }
 			}
-		]);
+		]).sort({ _id: -1 })
+		.limit(parseInt(req.params.limit) || 10)
+		.skip(parseInt(req.params.offset) - 1)
+		.exec();
 
 		return res.status(200).send({ status: true, message: constant.RETRIEVE_COLLABORATOR, collaborators });
 	} catch (error) {

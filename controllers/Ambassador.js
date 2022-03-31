@@ -66,15 +66,20 @@ exports.delete = async (req, res) => {
 /**Search Ambassador */
 exports.search = async (req, res) => {
 	try {
+		let totalRecord = await Ambassador.countDocuments({ isDeleted: false });
 		const searchItem = req.params.search;
 		console.log(searchItem);
 		let ambassador = await Ambassador.aggregate([
 			{
 				$match: {
-					$and: [ { name: { $regex: searchItem, $options: 'i' } }, { isDeleted: false } ]
+					$and: [ { name: { $regex: searchItem, $options: 'i' } }, 
+					{ isDeleted: false } ]
 				}
 			}
-		]);
+		]).sort({ _id: -1 })
+		.limit(parseInt(req.params.limit) || 10)
+		.skip(parseInt(req.params.offset) - 1)
+		.exec();
 
 		return res.status(200).send({ status: true, message: constant.RETRIEVE_AMBASSADOR, ambassador });
 	} catch (error) {
