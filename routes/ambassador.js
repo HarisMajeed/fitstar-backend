@@ -24,7 +24,7 @@ router.delete("/delete/:id", adminAuth, function (req, res) {
   ambassadorController.delete(req, res);
 });
 
-router.get("/search/:search", adminAuth, function (req, res) {
+router.get("/search/:search/:limit/:offset", adminAuth, function (req, res) {
   ambassadorController.search(req, res);
 });
 
