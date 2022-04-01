@@ -78,7 +78,7 @@ router.get("/fitstars/list", function (req, res) {
   userController.searchUserByRole(req, res);
 });
 
-router.get("/get/:role", function (req, res) {
+router.get("/get/:role/:limit/:offset", function (req, res) {
   userController.getUserByRole(req, res);
 });
 
