@@ -159,6 +159,16 @@ exports.getProfile = async (req, res) => {
 	}
 };
 
+exports.getUserProfile = async (req, res) => {
+	try {
+		let profile = await Profiles.findOne({ _id: req.params.id });
+		return res.status(200).send({ message: constant.SUCCESS, profile });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).send({ message: error.message });
+	}
+};
+
 exports.changePassword = async (req, res) => {
 	try {
 		let body = req.body;
