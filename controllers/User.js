@@ -315,10 +315,7 @@ exports.search = async (req, res) => {
 					]
 				}
 			}
-		]).sort({ _id: -1 })
-			.limit(parseInt(req.params.limit) || 10)
-			.skip(parseInt(req.params.offset) - 1)
-			.exec();
+		])
 		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER,totalRecords ,users });
 	} catch (error) {
 		console.log('ERROR:::', error);
