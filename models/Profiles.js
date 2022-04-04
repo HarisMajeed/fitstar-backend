@@ -140,7 +140,7 @@ const profiles = new Schema(
       {
         serviceTitle: { type: String, default: "" },
         interests: [],
-        compensation: { type: String, default: "" },
+        compensation: [],
         sessionName: { type: String, default: "" },
         activities: [],
         days: [],
@@ -150,7 +150,7 @@ const profiles = new Schema(
         description: { type: String, default: "" },
         price: { type: Number, default: 0 },
         file: { type: String, default: "" },
-        spotsAvailbe: { type: Number, default: 0 },
+        spotsAvailbe: { type: String, default: '' },
       },
     ],
     contactUs: {
