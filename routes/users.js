@@ -85,5 +85,10 @@ router.get("/search/:search", adminAuth, function (req, res) {
 router.get("/fitstars/list", function (req, res) {
   userController.searchUserByRole(req, res);
 });
-
+router.get("/get/dashboard/role/:role/:limit/:offset",function(req,res){
+  userController.getUserByRole(req, res);
+})
+router.get("/get/dashboard/search/:search/:limit/:offset",function(req,res){
+  userController.searchUser(req, res);
+})
 module.exports = router;
