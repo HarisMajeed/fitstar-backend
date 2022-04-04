@@ -127,12 +127,7 @@ const profiles = new Schema(
     proAbout: { type: proAboutSchema, default: {} },
     modelAbout: {type: modelAboutSchema, default: {} },
     centerAbout: {type: centerAboutSchema, default: {} },
-    videos: [
-      {
-        url: { type: String, default: "" },
-        videoType: { type: String, default: "" },
-      },
-    ],
+    videos: [],
     portfolio: [
       {
         imageBefore: { type: String, default: "" },
