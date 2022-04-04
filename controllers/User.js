@@ -411,7 +411,7 @@ exports.searchUserByRole = async (req, res) => {
 exports.getUserByRole = async (req, res) => {
 	try {
 		let searchItem = req.params.role;
-		let totalRecords = await User.countDocuments({ isDeleted: false });
+		let totalRecords = await User.countDocuments({ isDeleted: false, role: searchItem });
 		let users = await User.find({
 			$and: [ { role: searchItem }, { isDeleted: false } ]
 		})
