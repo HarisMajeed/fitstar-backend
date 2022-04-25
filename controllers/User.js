@@ -281,7 +281,6 @@ exports.get = async (req, res) => {
 /**DELETE User */
 exports.delete = async (req, res) => {
 	try {
-	
 		await User.updateOne({ _id: req.params.id }, { $set: { isDeleted: true } });
 		return res.status(200).send({ status: true, message: constant.DELETE_USER });
 	} catch (error) {
@@ -305,11 +304,12 @@ exports.search = async (req, res) => {
 					]
 				}
 			}
-		]).sort({ _id: -1 })
+		])
+			.sort({ _id: -1 })
 			.limit(parseInt(req.params.limit) || 10)
 			.skip(parseInt(req.params.offset) - 1)
 			.exec();
-		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER,totalRecords ,users });
+		return res.status(200).send({ status: true, message: constant.RETRIEVE_USER, totalRecords, users });
 	} catch (error) {
 		console.log('ERROR:::', error);
 		return res.status(500).json({ status: false, message: error.message });
@@ -330,42 +330,44 @@ exports.getByRole = async (req, res) => {
 /**Landing page Search user by role */
 
 exports.searchUserByRole = async (req, res) => {
-
 	try {
-		const {name,location,specialities}=req.query
+		const { name, location, specialities } = req.query;
 		const role = req.query.role;
-		
+
 		let specialityQuery = [];
-		if(role){
-			specialityQuery.push({role})
+		if (role) {
+			specialityQuery.push({ role });
 		}
-		if(name){
-			specialityQuery.push({fullName: {
-				$regex: name,
-				$options: 'i'
-			}})
+		if (name) {
+			specialityQuery.push({
+				fullName: {
+					$regex: name,
+					$options: 'i'
+				}
+			});
 		}
-		if(location){
-			specialityQuery.push({location: {
-				$regex: location,
-				$options: 'i'
-			}})
+		if (location) {
+			specialityQuery.push({
+				location: {
+					$regex: location,
+					$options: 'i'
+				}
+			});
 		}
 		if (role == 'pro' && specialities) {
 			specialityQuery.push({
 				'proAbout.qualifications.specialities': {
-					$in: [specialities]
+					$in: [ specialities ]
 				}
-			})
+			});
 		}
-		
+
 		if (role == 'model' && specialities) {
 			specialityQuery.push({
 				'centerAbout.centerAboutSchema.specialities': {
-					$in: [specialities]
+					$in: [ specialities ]
 				}
-			})
-			
+			});
 		}
 		let users = await Profiles.aggregate([
 			{
@@ -410,6 +412,14 @@ exports.getUserByRole = async (req, res) => {
 			.skip(parseInt(req.params.offset) - 1)
 			.exec();
 		return res.status(200).send({ status: true, message: constant.SUCCESS, totalRecords, users });
+	} catch (error) {
+		return res.status(500).json({ status: false, message: error.message });
+	}
+};
+exports.getAllUsers = async (req, res) => {
+	try {
+		const users = await User.find({ isDeleted: false });
+		return res.status(200).send({ status: true, message: constant.SUCCESS, users });
 	} catch (error) {
 		return res.status(500).json({ status: false, message: error.message });
 	}
