@@ -419,3 +419,17 @@ exports.getUserByRole = async (req, res) => {
 		return res.status(500).json({ status: false, message: error.message });
 	}
 };
+
+
+exports.getAllUsers = async (req, res) => {
+	try {
+		console.log('here')
+		const users = await User.find({isDeleted: false});
+		console.log('users', users)
+		return res.status(200).send({ status: true, message: constant.SUCCESS, users });
+	} catch (error) {
+		return res.status(500).json({ status: false, message: error.message });
+	}
+};
+
+
