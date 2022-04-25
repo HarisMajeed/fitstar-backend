@@ -159,6 +159,16 @@ exports.getProfile = async (req, res) => {
 	}
 };
 
+exports.getUserProfile = async (req, res) => {
+	try {
+		let profile = await Profiles.findOne({ _id: req.params.id });
+		return res.status(200).send({ message: constant.SUCCESS, profile });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).send({ message: error.message });
+	}
+};
+
 exports.changePassword = async (req, res) => {
 	try {
 		let body = req.body;
@@ -400,10 +410,13 @@ exports.searchUserByRole = async (req, res) => {
 	}
 };
 
+
+/** Admin Dashboard search and get*/
+
 exports.getUserByRole = async (req, res) => {
 	try {
 		let searchItem = req.params.role;
-		let totalRecords = await User.countDocuments({ isDeleted: false });
+		let totalRecords = await User.countDocuments({ isDeleted: false, role: searchItem });
 		let users = await User.find({
 			$and: [ { role: searchItem }, { isDeleted: false } ]
 		})
@@ -424,3 +437,35 @@ exports.getAllUsers = async (req, res) => {
 		return res.status(500).json({ status: false, message: error.message });
 	}
 };
+
+exports.searchUser = async (req,res) => {
+	try{
+		
+			let searchItem = req.params.search;
+			try {
+				let users = await User.aggregate([
+					{
+						$match: {
+							$and: [
+								{ fullName: { $regex: searchItem, $options: 'i' } },
+								{ isDeleted: false },
+								{ role: { $ne: 'admin' } }
+							]
+						}
+					}
+				]).sort({ _id: -1 })
+				.limit(parseInt(req.params.limit) || 10)
+				.skip(parseInt(req.params.offset) - 1)
+				.exec();
+				 let totalRecords = users.length
+				return res.status(200).send({ status: true, message: constant.RETRIEVE_USER ,users, totalRecords });
+			} catch (error) {
+				console.log('ERROR:::', error);
+				return res.status(500).json({ status: false, message: error.message });
+			}
+	
+	}
+	catch(error) {
+		return res.status(500).json({ status: false, message: error.message });
+	}
+}

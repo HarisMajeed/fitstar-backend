@@ -58,6 +58,10 @@ router.get("/my/profile", auth, function (req, res) {
   userController.getProfile(req, res);
 });
 
+router.get("/get/profile/:id",  function (req, res) {
+  userController.getUserProfile(req, res);
+});
+
 router.post("/create", adminAuth, userCreate, function (req, res) {
   userController.create(req, res);
 });
@@ -66,24 +70,29 @@ router.get("/all/:limit/:offset", adminAuth, function (req, res) {
   userController.get(req, res);
 });
 
+router.get("/get/:role", function (req, res) {
+  userController.getByRole(req, res);
+});
+
 router.delete("/delete/:id", adminAuth, function (req, res) {
   userController.delete(req, res);
 });
 
-router.get("/search/:search/:limit/:offset", adminAuth, function (req, res) {
+router.get("/search/:search", adminAuth, function (req, res) {
   userController.search(req, res);
 });
 
 router.get("/fitstars/list", function (req, res) {
   userController.searchUserByRole(req, res);
 });
-
-router.get("/get/:role/:limit/:offset", function (req, res) {
+router.get("/get/dashboard/role/:role/:limit/:offset",function(req,res){
   userController.getUserByRole(req, res);
 });
 router.get("/get", function (req, res) {
   userController.getAllUsers(req, res);
 });
 
-
+router.get("/get/dashboard/search/:search/:limit/:offset",function(req,res){
+  userController.searchUser(req, res);
+})
 module.exports = router;

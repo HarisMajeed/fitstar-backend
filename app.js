@@ -14,11 +14,11 @@ const landingRouter = require('./routes/landing');
 const ambassadorRouter = require('./routes/ambassador');
 const dashboardRouter = require('./routes/dashboard');
 const app = express();
- 
+
 app.use(cors());
 
 /**DB Connection */
-require('./utils/dbConnect');
+require('./utils/dbConnect'); 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -7,6 +7,7 @@ const userSchema = JOI.object().keys({
     password: JOI.string().required(),
     role: JOI.string().valid("pro", "center", "model").required(),
     location: JOI.string().required(),
+    checkbtn: JOI.boolean().optional().allow('').allow(null)
 });
 
 exports.user = (req, res, next) => {
