@@ -14,6 +14,10 @@ const userSchema = new Schema(
     role: { type: String, enum: ["admin", "pro", "center", "model"] },
     isDeleted: { type: Boolean, default: true },
     status: { type: String, enum: ["active", "blocked"], default: "blocked" },
+    referId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    },
   },
   { timestamps: true, versionKey: false }
 );

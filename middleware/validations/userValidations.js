@@ -26,6 +26,7 @@ const userSchema = JOI.object().keys({
     role: JOI.string().valid("pro", "center", "model").required(),
     location: JOI.string().required(),
     image: JOI.string().required(),
+    referId: JOI.string()
 });
 
 exports.userCreate = (req, res, next) => {
