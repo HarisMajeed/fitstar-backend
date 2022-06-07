@@ -244,6 +244,7 @@ exports.updateStatus = async (req, res) => {
 /**Create User */
 exports.create = async (req, res) => {
 	try {
+		console.log(req)
 		req.body.email = req.body.email.toLowerCase();
 		let getUser = await User.findOne({ email: req.body.email });
 		if (getUser) {
