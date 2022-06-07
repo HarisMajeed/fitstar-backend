@@ -8,7 +8,13 @@ const userSchema = new Schema(
     email: { type: String, unique: true },
     fullName: { type: String, default: "" },
     password: { type: String },
-    location: { type: String, default: "" },
+    location: [
+      {
+        country: { type: String, default: "" },
+        city: { type: String, default: "" },
+        state: { type: String, default: "" },
+      },
+    ],
     tokenStatus: { type: Boolean, default: false },
     lastLogin: { type: String },
     role: { type: String, enum: ["admin", "pro", "center", "model"] },
@@ -16,7 +22,7 @@ const userSchema = new Schema(
     status: { type: String, enum: ["active", "blocked"], default: "blocked" },
     referId: {
       type: Schema.Types.ObjectId,
-      ref: 'users'
+      ref: "users",
     },
   },
   { timestamps: true, versionKey: false }

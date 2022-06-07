@@ -123,7 +123,13 @@ const profiles = new Schema(
   {
     fullName: { type: String, default: "" },
     image: { type: String, default: "" },
-    location: { type: String, default: "" },
+    location: [
+      {
+        country: { type: String, default: "" },
+        city: { type: String, default: "" },
+        state: { type: String, default: "" },
+      },
+    ],
     rating: { type: Number, default: 0 },
     ratingComment: { type: String, default: "" },
     proAbout: { type: proAboutSchema, default: {} },

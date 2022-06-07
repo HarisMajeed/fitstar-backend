@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const constant = require('../constants/ConstantMessages');
 const file = require('../utils/fileUpload');
 const Profiles = require('../models/Profiles');
+const mailer  = require('../utils/mailer')
 
 /**update basic info and active role of user */
 exports.profileBasic = async (req, res) => {
@@ -243,6 +244,7 @@ exports.updateStatus = async (req, res) => {
 /**Create User */
 exports.create = async (req, res) => {
 	try {
+		console.log(req)
 		req.body.email = req.body.email.toLowerCase();
 		let getUser = await User.findOne({ email: req.body.email });
 		if (getUser) {
@@ -466,6 +468,21 @@ exports.searchUser = async (req,res) => {
 	
 	}
 	catch(error) {
+		return res.status(500).json({ status: false, message: error.message });
+	}
+}
+
+exports.contactUser = async  (req, res) => {
+	try {
+		if(req.body.to && req.body.from) {
+		  const check = await mailer.contactUsEmail(req.body)
+		  res.status(200).json({ message: 'Email Successfully send' })
+		}
+		else{
+		  return res.status(200).json({ message: 'Sender / Reciver Email Required.' })
+		}
+		
+	} catch(err) {
 		return res.status(500).json({ status: false, message: error.message });
 	}
 }

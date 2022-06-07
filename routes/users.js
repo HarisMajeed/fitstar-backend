@@ -95,4 +95,7 @@ router.get("/get", function (req, res) {
 router.get("/get/dashboard/search/:search/:limit/:offset",function(req,res){
   userController.searchUser(req, res);
 })
+router.post("/fitstar/contactus",function(req,res){
+  userController.contactUser(req, res);
+})
 module.exports = router;
