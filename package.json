@@ -5,6 +5,9 @@
   "scripts": {
     "start": "nodemon ./bin/www"
   },
+  "engines": {
+    "node": "14.17.5"
+  },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@sendgrid/mail": "^7.4.5",
