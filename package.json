@@ -6,7 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "engines": {
-    "node": "14.17.5"
+    "node": "16.15.0"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
