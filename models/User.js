@@ -8,13 +8,12 @@ const userSchema = new Schema(
     email: { type: String, unique: true },
     fullName: { type: String, default: "" },
     password: { type: String },
-    location: [
+    location: 
       {
         country: { type: String, default: "" },
         city: { type: String, default: "" },
         state: { type: String, default: "" },
       },
-    ],
     tokenStatus: { type: Boolean, default: false },
     lastLogin: { type: String },
     role: { type: String, enum: ["admin", "pro", "center", "model"] },

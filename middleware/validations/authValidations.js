@@ -6,7 +6,7 @@ const userSchema = JOI.object().keys({
     email: JOI.string().email().required(),
     password: JOI.string().required(),
     role: JOI.string().valid("pro", "center", "model").required(),
-    location: JOI.array().items({
+    location: JOI.object({
       country:JOI.string(),
       state:JOI.string(),
       city:JOI.string(),
@@ -14,14 +14,7 @@ const userSchema = JOI.object().keys({
     referId: JOI.string(),
     checkbtn: JOI.boolean().optional().allow('').allow(null)
   });
-// const userSachema = JOI.object().keys({
-//     fullName: JOI.string().required(),
-//     email: JOI.string().email().required(),
-//     password: JOI.string().required(),
-//     role: JOI.string().valid("pro", "center", "model").required(),
-//     location: JOI.string().required(),
-   
-// });
+
 
 exports.user = (req, res, next) => {
     const result = userSchema.validate(req.body);

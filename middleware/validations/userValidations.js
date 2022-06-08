@@ -27,7 +27,7 @@ const userSchema = JOI.object().keys({
   email: JOI.string().email().required(),
   password: JOI.string().required(),
   role: JOI.string().valid("pro", "center", "model").required(),
-  location: JOI.array().items({
+  location: JOI.object({
     country:JOI.string(),
     state:JOI.string(),
     city:JOI.string(),
