@@ -378,7 +378,20 @@ exports.getByRole = async (req, res) => {
 
 exports.searchUserByRole = async (req, res) => {
   try {
-    const { name, location, specialities,city , country, state} = req.query;
+    const {
+      name,
+      location,
+      specialities,
+      gender,
+      fitnessCenterType,
+      clientPreference,
+      availabilityForOnLineliveTraining,
+      experience,
+      bodyType,
+      ourFitnessPro,
+      modelingInterest,
+    } = req.query;
+    console.log(req.query);
     const role = req.query.role;
 
     let specialityQuery = [];
@@ -393,42 +406,102 @@ exports.searchUserByRole = async (req, res) => {
         },
       });
     }
-    if (city) {
+
+    if (experience) {
       specialityQuery.push({
-        "location.city": {
-          $regex: city,
+        "proAbout.qualifications.experience": experience,
+      });
+    }
+
+    if (location) {
+      specialityQuery.push({
+        $or: [
+          { "location.city": { $regex: location, $options: "i" } },
+          { "location.country": { $regex: location, $options: "i" } },
+          { "location.state": { $regex: location, $options: "i" } },
+        ],
+      });
+    }
+    if (modelingInterest) {
+      specialityQuery.push({
+        "modelAbout.modelingInterest": {
+          $in: [modelingInterest],
+        },
+      });
+    }
+    if (clientPreference) {
+      specialityQuery.push({
+        "proAbout.business.clientPreference": clientPreference,
+      });
+    }
+    if (availabilityForOnLineliveTraining) {
+      specialityQuery.push({
+        "proAbout.business.availabilityForOnLineliveTraining": {
+          $regex: availabilityForOnLineliveTraining,
           $options: "i",
         },
       });
     }
-	if (country) {
-		specialityQuery.push({
-		  "location.country": {
-			$regex: country,
-			$options: "i",
-		  },
-		});
-	  }
-	  if (state) {
-		specialityQuery.push({
-		  "location.state": {
-			$regex: state,
-			$options: "i",
-		  },
-		});
-	  }
-    if (role == "pro" && specialities) {
+    if (fitnessCenterType && role == "center") {
       specialityQuery.push({
-        "proAbout.qualifications.specialities": {
-          $in: [specialities],
+        "centerAbout.fitnessCenterType": {
+          $regex: fitnessCenterType,
+          $options: "i",
         },
       });
     }
-
-    if (role == "model" && specialities) {
+    if (ourFitnessPro) {
       specialityQuery.push({
-        "centerAbout.centerAboutSchema.specialities": {
-          $in: [specialities],
+        "centerAbout.ourFitnessPro.name": {
+          $regex: ourFitnessPro,
+          $options: "i",
+        },
+      });
+    }
+    if (role == "pro" && bodyType) {
+      specialityQuery.push({
+        "proAbout.personal.bodyType": bodyType,
+      });
+    }
+    if (role == "model" && bodyType) {
+      specialityQuery.push({
+        "modelAbout.bodyType": bodyType,
+      });
+    }
+    if (role == "pro" && specialities) {
+      specialityQuery.push({
+        "proAbout.qualifications.specialities.name": {
+          $regex: specialities,
+          $options: "i",
+        },
+      });
+    }
+    if (role == "pro" && gender) {
+      specialityQuery.push({
+        "proAbout.personal.gender": gender,
+      });
+    }
+    if (role == "center" && gender) {
+      specialityQuery.push({
+        "proAbout.personal.gender": gender,
+      });
+    }
+
+    if (role == "model" && gender) {
+      specialityQuery.push({
+        "modelAbout.gender": gender,
+      });
+    }
+    if (role == "model" && experience) {
+      specialityQuery.push({
+        "modelAbout.experience": experience,
+      });
+    }
+    if (role == "center" && specialities) {
+      specialityQuery.push({
+        "centerAbout.specialities.name": {
+          $regex: specialities,
+          $options: "i",
         },
       });
     }
@@ -439,23 +512,6 @@ exports.searchUserByRole = async (req, res) => {
         },
       },
     ]);
-    // let users = await Profiles.find({ role: 'pro' });
-    // let arr = [];
-    // users.map((item) => {
-    // 	if (
-    // 		item.location === 'islamabad' &&
-    // 		item.proAbout.qualifications.specialities.map((item) => {
-    //                if(item === 'aerobics') {
-    // 				   return item
-    // 			   }
-    // 		})
-    // 	  && item.fullName === 'Hamza'
-    // 	)
-    // 	{
-    // 		arr.push(item);
-    // 	}
-    // });
-    ///	res.json(arr);
     return res
       .status(200)
       .send({ status: true, message: constant.RETRIEVE_USER, users });
